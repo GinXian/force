@@ -18,6 +18,9 @@ import { ConfirmArtworkModalQueryRenderer } from "./ConfirmArtworkModal"
 import { userHasLabFeature } from "v2/Utils/user"
 import { useSystemContext } from "v2/System/SystemContext"
 import { BuyerGuaranteeMessage } from "./BuyerGuaranteeMessage"
+import { extractNodes } from "v2/Utils/extractNodes"
+import { returnOrderModalDetails } from "../Utils/returnOrderModalDetails"
+import { OrderModal } from "./OrderModal"
 
 export interface ConversationProps {
   conversation: Conversation_conversation
@@ -84,6 +87,8 @@ const Conversation: React.FC<ConversationProps> = props => {
   ))
 
   const [showConfirmArtworkModal, setShowConfirmArtworkModal] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
+
   const artwork =
     conversation.items?.[0]?.item?.__typename === "Artwork" &&
     conversation.items?.[0]?.item
@@ -113,6 +118,16 @@ const Conversation: React.FC<ConversationProps> = props => {
       }
     })
   }
+
+  const activeOrder = extractNodes(conversation.orderConnection)[0]
+  const { buyerAction } = activeOrder
+  const kind = buyerAction
+  const orderID = activeOrder.internalID
+
+  const { url, modalTitle } = returnOrderModalDetails({
+    kind: kind!,
+    orderID: orderID,
+  })
 
   return (
     <Flex flexDirection="column" flexGrow={1}>
@@ -148,6 +163,7 @@ const Conversation: React.FC<ConversationProps> = props => {
           refetch={props.refetch}
           environment={relay.environment}
           openInquiryModal={() => setShowConfirmArtworkModal(true)}
+          openOrderModal={() => setShowOrderModal(true)}
         />
       </NoScrollFlex>
       {artwork && (
@@ -158,6 +174,13 @@ const Conversation: React.FC<ConversationProps> = props => {
           closeModal={() => setShowConfirmArtworkModal(false)}
         />
       )}
+      <OrderModal
+        path={url!}
+        orderID={orderID}
+        title={modalTitle!}
+        show={showOrderModal}
+        closeModal={() => setShowOrderModal(false)}
+      />
     </Flex>
   )
 }
@@ -200,6 +223,19 @@ export const ConversationPaginationContainer = createPaginationContainer(
         initialMessage
         lastMessageID
         unread
+        orderConnection(
+          first: 10
+          states: [APPROVED, FULFILLED, SUBMITTED, REFUNDED]
+        ) {
+          edges {
+            node {
+              internalID
+              ... on CommerceOfferOrder {
+                buyerAction
+              }
+            }
+          }
+        }
         messagesConnection(first: $count, after: $after, sort: DESC)
           @connection(key: "Messages_messagesConnection", filters: []) {
           pageInfo {

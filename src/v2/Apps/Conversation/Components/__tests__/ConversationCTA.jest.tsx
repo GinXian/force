@@ -16,6 +16,7 @@ describe("ConversationCTA", () => {
         <ConversationCTAFragmentContainer
           conversation={props.me.conversation}
           openInquiryModal={jest.fn()}
+          openOrderModal={jest.fn()}
         />
       )
     },
