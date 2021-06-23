@@ -36,6 +36,7 @@ interface SavedAddressesProps {
   commitMutation?: CommitMutation
   relay: RelayRefetchProp
   addressCount?: number
+  selectedAddress?: string
 }
 // @ts-expect-error STRICT_NULL_CHECK
 type Address = SavedAddresses_me["addressConnection"]["edges"][0]["node"]
@@ -57,7 +58,14 @@ const SavedAddresses: React.FC<SavedAddressesProps> = props => {
   const [showAddressModal, setShowAddressModal] = useState(false)
   const [address, setAddress] = useState(null as Address)
   const logger = createLogger("SavedAddresses.tsx")
-  const { onSelect, handleClickEdit, me, inCollectorProfile, relay } = props
+  const {
+    onSelect,
+    handleClickEdit,
+    me,
+    inCollectorProfile,
+    relay,
+    selectedAddress,
+  } = props
   const addressList = me?.addressConnection?.edges ?? []
   const { relayEnvironment } = useSystemContext()
 
@@ -244,7 +252,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = props => {
     <>
       <RadioGroup
         onSelect={onSelect}
-        defaultValue={defaultAddressIndex(addressList)}
+        defaultValue={selectedAddress || defaultAddressIndex(addressList)}
       >
         {addressItems}
       </RadioGroup>

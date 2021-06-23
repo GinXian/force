@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Button, Input, Modal, ModalWidth, Spacer, Text } from "@artsy/palette"
-import { SavedAddressType } from "../Utils/shippingAddressUtils"
+import { SavedAddressType } from "../Utils/shippingUtils"
 import { Formik, FormikHelpers, FormikProps } from "formik"
 import {
   removeEmptyKeys,
