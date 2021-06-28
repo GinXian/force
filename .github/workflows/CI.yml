@@ -1,9 +1,11 @@
 name: First GitHub Actions Config
 on:
   push:
-    - master
+    branches:
+      - master
   pull_request:
-    - master
+    branches:
+      - master
 
 jobs:
   get_hello_world: &get_string
