@@ -12,9 +12,9 @@ jobs:
       output1: ${{ steps.hello.outputs.fuck }}
       output2: ${{ steps.world.outputs.damn }}
     steps:
-      - id: print hello
+      - id: hello
         run: echo "::set-output name=fuck::hello"
-      - id: print world
+      - id: world
         run: echo "::set-output name=damn::world"
 
   print_hello_world:
