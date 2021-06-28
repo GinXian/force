@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  get_hello_world: &get_string
+  get_hello_world: 
     runs-on: ubuntu-latest
     outputs:
       output1: ${{ steps.hello.outputs.fuck }}
@@ -21,6 +21,6 @@ jobs:
 
   print_hello_world:
     runs-on: ubuntu-latest
-    needs: *get_string
+    needs: get_hello_world
     steps:
       - run: echo ${{ needs.get_hello_world.outputs.output1 }} ${{ needs.get_hello_world.outputs.output2 }}
