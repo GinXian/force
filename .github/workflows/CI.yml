@@ -1,0 +1,24 @@
+name: First GitHub Actions Config
+on:
+  push:
+    - main
+  pull_request:
+    - main
+
+jobs:
+  get_hello_world: &get_string
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.hello.outputs.fuck }}
+      output2: ${{ steps.world.outputs.damn }}
+    steps:
+      - id: print hello
+        run: echo "::set-output name=fuck::hello"
+      - id: print world
+        run: echo "::set-output name=damn::world"
+
+  print_hello_world:
+    runs-on: ubuntu-latest
+    needs: *get_string
+    steps:
+      - run: echo ${{ needs.get_hello_world.outputs.output1 }} ${{ needs.get_hello_world.outputs.output2 }}
