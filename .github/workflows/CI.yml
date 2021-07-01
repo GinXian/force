@@ -1,4 +1,5 @@
 # Add user name and email for git commits
+# Change needs reverting
 name: First GitHub Actions Config
 on:
   push:
